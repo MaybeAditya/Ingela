@@ -1,9 +1,10 @@
+<!-- UPDATED Queen's Complaint Box with Dark Mode + More Features -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>👑 Queen's Complaint Box 2.0</title>
+  <title>👑 Queen's Complaint Box 3.0</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     * { box-sizing: border-box; }
@@ -15,7 +16,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: background 0.4s ease;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    body.dark {
+      background: #1c1c1c;
+      color: #eee;
     }
     h1 {
       color: #ff4da6;
@@ -29,6 +34,11 @@
       width: 100%;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       position: relative;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    body.dark .container {
+      background: #2c2c2c;
+      color: #eee;
     }
     label {
       font-weight: bold;
@@ -40,7 +50,6 @@
       padding: 0.8rem;
       border-radius: 10px;
       border: 1px solid #ccc;
-      resize: vertical;
       font-size: 1rem;
     }
     button {
@@ -51,8 +60,7 @@
       border-radius: 10px;
       font-size: 1rem;
       cursor: pointer;
-      margin-top: 1.2rem;
-      transition: background 0.3s;
+      margin-top: 1rem;
     }
     button:hover {
       background-color: #cc0066;
@@ -98,31 +106,25 @@
     }
     .box {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       gap: 1rem;
     }
-    .auto-apology {
+    .auto-apology, .compliment, .memory, .ai-response {
       margin-top: 1rem;
-      background: #fff6fa;
-      border-left: 4px solid #ff4da6;
-      padding: 1rem;
-      font-style: italic;
-      border-radius: 10px;
-    }
-    .compliment {
-      background: #e6ffe6;
-      border-left: 4px solid #33cc33;
       padding: 1rem;
       border-radius: 10px;
-      margin-top: 1rem;
-      font-weight: bold;
     }
+    .auto-apology { background: #fff6fa; border-left: 4px solid #ff4da6; font-style: italic; }
+    .compliment { background: #e6ffe6; border-left: 4px solid #33cc33; font-weight: bold; }
+    .memory { background: #e0f7ff; border-left: 4px solid #3399ff; }
+    .ai-response { background: #f5f5f5; border-left: 4px solid #aaaaaa; font-style: italic; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="mode-toggle" onclick="toggleMode()">🌓 Toggle Mode</div>
-    <h1>💖 Queen's Complaint Box 2.0</h1>
+    <h1>💖 Queen's Complaint Box 3.0</h1>
     <form id="complaintForm">
       <label>Category</label>
       <select required>
@@ -153,7 +155,7 @@
       <label>Complaint Details</label>
       <textarea rows="4" placeholder="Tell me what I did, babe..." required></textarea>
 
-      <label>Compare to Your current Boyfriend (0 = trash 🗑, 10 = lol still trash)</label>
+      <label>Compare to Your Current Boyfriend (0 = trash 🗑, 10 = lol still trash)</label>
       <input type="range" min="0" max="10" value="0" disabled />
       <div style="text-align:center;">🗣 "BF? Who? Doesn’t even compare."</div>
 
@@ -161,10 +163,14 @@
         <button type="submit">📤 Submit</button>
         <button type="button" onclick="generateApology()">🙏 Auto-Apologize</button>
         <button type="button" onclick="giveCompliment()">🎁 Surprise Me</button>
+        <button type="button" onclick="showMemory()">💌 Sweet Memory</button>
+        <button type="button" onclick="aiRespond()">🧠 Read My Mind</button>
       </div>
     </form>
     <div id="apologyBox" class="auto-apology" style="display:none;"></div>
     <div id="complimentBox" class="compliment" style="display:none;"></div>
+    <div id="memoryBox" class="memory" style="display:none;"></div>
+    <div id="aiBox" class="ai-response" style="display:none;"></div>
   </div>
 
   <div class="toast" id="toast">📨 Complaint received, Your Highness!</div>
@@ -215,11 +221,13 @@
       e.preventDefault();
       showToast("📨 Complaint received, love bug 💘");
       for (let i = 0; i < 10; i++) createConfetti();
-      document.getElementById("apologyBox").style.display = "none";
-      document.getElementById("complimentBox").style.display = "none";
       this.reset();
       document.getElementById("emojiDisplay").innerText = "🙂";
       document.getElementById("pettyDisplay").innerText = "😇 Innocent";
+      document.getElementById("apologyBox").style.display = "none";
+      document.getElementById("complimentBox").style.display = "none";
+      document.getElementById("memoryBox").style.display = "none";
+      document.getElementById("aiBox").style.display = "none";
     });
 
     function generateApology() {
@@ -249,6 +257,33 @@
       box.innerText = compliments[Math.floor(Math.random() * compliments.length)];
       box.style.display = "block";
       showToast("💖 Compliment sent!");
+    }
+
+    function showMemory() {
+      const memories = [
+        "Remember our late-night Maggi dates under the stars? 🍜✨",
+        "That time we laughed so hard at nothing at 2 AM 😂",
+        "Your sleepy voice calls are my favorite. 💤📞",
+        "Our first inside joke. Still undefeated 😂",
+        "When you called me your safe space — melted me 💗"
+      ];
+      const box = document.getElementById("memoryBox");
+      box.innerText = memories[Math.floor(Math.random() * memories.length)];
+      box.style.display = "block";
+      showToast("📸 Memory unlocked!");
+    }
+
+    function aiRespond() {
+      const responses = [
+        "Calculating what she *really* meant... Error: infinite interpretations 🧠",
+        "Guessing: You're in trouble and you don't even know why yet. Good luck!",
+        "She says 'It's fine' — panic immediately.",
+        "Reading your mind... She's already texted her bestie about this 😬"
+      ];
+      const box = document.getElementById("aiBox");
+      box.innerText = responses[Math.floor(Math.random() * responses.length)];
+      box.style.display = "block";
+      showToast("🤖 Mind read!");
     }
   </script>
 </body>
